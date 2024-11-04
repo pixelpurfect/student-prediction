@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Predictor</title>
+</head>
+<body>
+    <h1>CGPA Predictor</h1>
+    <form action="/predict" method="post">
+        <label for="gender">Gender (0: Female, 1: Male):</label>
+        <input type="number" id="gender" name="gender" required><br>
+
+        <label for="parental_level_of_education">Parental Level of Education (0-5):</label>
+        <input type="number" id="parental_level_of_education" name="parental_level_of_education" required><br>
+
+        <label for="lunch">Lunch (0: Standard, 1: Free/Reduced):</label>
+        <input type="number" id="lunch" name="lunch" required><br>
+
+        <label for="test_preparation">Test Preparation (0: None, 1: Completed):</label>
+        <input type="number" id="test_preparation" name="test_preparation" required><br>
+
+        <label for="hours_req_per_unit">Hours Required per Unit:</label>
+        <input type="number" id="hours_req_per_unit" name="hours_req_per_unit" required><br>
+
+        <label for="hours_of_sleep">Hours of Sleep:</label>
+        <input type="number" id="hours_of_sleep" name="hours_of_sleep" required><br>
+
+        <label for="lastsemcgpa">Last Semester CGPA:</label>
+        <input type="number" id="lastsemcgpa" name="lastsemcgpa" required><br>
+
+        <label for="cgpabefore">Previous CGPA:</label>
+        <input type="number" id="cgpabefore" name="cgpabefore" required><br>
+
+        <input type="submit" value="Predict CGPA">
+    </form>
+
+    {% if predictions %}
+        <h2>Predicted CGPA:</h2>
+        <ul>
+            {% for model_name, predicted_cgpa in predictions.items() %}
+                <li>{{ model_name }}: {{ predicted_cgpa }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
