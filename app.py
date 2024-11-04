@@ -1,35 +1,36 @@
-import streamlit as st
-import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
-from preprocess import load_and_preprocess_data, preprocess_input
+from flask import Flask, render_template, request
+from model import predict_cgpa
 
-# Load and preprocess the data
-X_train, X_test, y_train, y_test, scaler, label_encoders = load_and_preprocess_data("Real Time Dataset - Form responses 1.csv")
+app = Flask(__name__)
 
-# Train a model (you can choose any model)
-model = RandomForestRegressor()
-model.fit(X_train, y_train)
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-# Streamlit UI
-st.title("CGPA Predictor")
+@app.route('/predict', methods=['POST'])
+def predict():
+    gender = int(request.form['gender'])
+    parental_level_of_education = int(request.form['parental_level_of_education'])
+    lunch = int(request.form['lunch'])
+    test_preparation = int(request.form['test_preparation'])
+    hours_req_per_unit = float(request.form['hours_req_per_unit'])
+    hours_of_sleep = float(request.form['hours_of_sleep'])
+    lastsemcgpa = float(request.form['lastsemcgpa'])
+    cgpabefore = float(request.form['cgpabefore'])
 
-# Create input fields for each feature
-input_data = {}
-for column in label_encoders.keys():
-    if column in ['What is your gender?  ', 'Do you participate in extracurricular activities?']:
-        input_data[column] = st.selectbox(column, options=list(label_encoders[column].classes_))
-    else:
-        input_data[column] = st.text_input(column)
+    input_data = {
+        'gender': [gender],
+        'parental_level_of_education': [parental_level_of_education],
+        'lunch': [lunch],
+        'test_preparation': [test_preparation],
+        'hours_req_per_unit': [hours_req_per_unit],
+        'hours_of_sleep': [hours_of_sleep],
+        'lastsemcgpa': [lastsemcgpa],
+        'cgpabefore': [cgpabefore]
+    }
 
-# Button to predict
-if st.button("Predict CGPA"):
-    try:
-        # Preprocess input data
-        processed_data = preprocess_input(input_data, label_encoders, scaler)
+    predicted_cgpas = predict_cgpa(input_data)
+    return render_template('index.html', predictions=predicted_cgpas)
 
-        # Make prediction
-        prediction = model.predict(processed_data)
-        st.success(f"Predicted CGPA: {prediction[0]:.2f}")
-
-    except ValueError as e:
-        st.error(f"Error in processing input: {str(e)}")
+if __name__ == '__main__':
+    app.run(debug=True)
