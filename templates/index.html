@@ -4,44 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CGPA Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>CGPA Predictor</h1>
-    <form action="/predict" method="post">
-        <label for="gender">Gender (0: Female, 1: Male):</label>
-        <input type="number" id="gender" name="gender" required><br>
+    <form method="POST">
+        <label for="gender">Gender (0: Female, 1: Male)</label>
+        <input type="text" id="gender" name="gender" required>
 
-        <label for="parental_level_of_education">Parental Level of Education (0-5):</label>
-        <input type="number" id="parental_level_of_education" name="parental_level_of_education" required><br>
+        <label for="education">Parental Level of Education (0-4)</label>
+        <input type="text" id="education" name="education" required>
 
-        <label for="lunch">Lunch (0: Standard, 1: Free/Reduced):</label>
-        <input type="number" id="lunch" name="lunch" required><br>
+        <label for="lunch">Lunch (0: Free/Reduced, 1: Standard)</label>
+        <input type="text" id="lunch" name="lunch" required>
 
-        <label for="test_preparation">Test Preparation (0: None, 1: Completed):</label>
-        <input type="number" id="test_preparation" name="test_preparation" required><br>
+        <label for="test_preparation">Test Preparation (0: None, 1: Completed)</label>
+        <input type="text" id="test_preparation" name="test_preparation" required>
 
-        <label for="hours_req_per_unit">Hours Required per Unit:</label>
-        <input type="number" id="hours_req_per_unit" name="hours_req_per_unit" required><br>
+        <label for="study_hours">Hours Required to Complete a Unit</label>
+        <input type="number" id="study_hours" name="study_hours" step="0.1" required>
 
-        <label for="hours_of_sleep">Hours of Sleep:</label>
-        <input type="number" id="hours_of_sleep" name="hours_of_sleep" required><br>
+        <label for="sleep_hours">Hours of Sleep</label>
+        <input type="number" id="sleep_hours" name="sleep_hours" step="0.1" required>
 
-        <label for="lastsemcgpa">Last Semester CGPA:</label>
-        <input type="number" id="lastsemcgpa" name="lastsemcgpa" required><br>
+        <label for="last_sem_cgpa">Last Semester CGPA</label>
+        <input type="number" id="last_sem_cgpa" name="last_sem_cgpa" step="0.01" required>
 
-        <label for="cgpabefore">Previous CGPA:</label>
-        <input type="number" id="cgpabefore" name="cgpabefore" required><br>
+        <label for="previous_cgpa">Previous CGPA</label>
+        <input type="number" id="previous_cgpa" name="previous_cgpa" step="0.01" required>
 
-        <input type="submit" value="Predict CGPA">
+        <button type="submit">Predict CGPA</button>
     </form>
 
-    {% if predictions %}
-        <h2>Predicted CGPA:</h2>
-        <ul>
-            {% for model_name, predicted_cgpa in predictions.items() %}
-                <li>{{ model_name }}: {{ predicted_cgpa }}</li>
-            {% endfor %}
-        </ul>
+    {% if predicted_cgpa is not none %}
+        <h2>Predicted CGPA: {{ predicted_cgpa }}</h2>
+        <h3>Suggestions to Improve Academic Performance:</h3>
+        <p>{{ suggestions }}</p>
+        <h3>Personalized Study Plan:</h3>
+        <pre>{{ study_plan }}</pre>
     {% endif %}
 </body>
 </html>
